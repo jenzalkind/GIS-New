@@ -77,7 +77,8 @@
     <string name="thank2">שמרנו את העידכונים שלך, תודה על הקדשת הזמן!</string>
     <string name="getDirection">נווט</string>
     <string name="buildYourR">בנה את המסלול שלך!</string>
-    <string name="shouldAdd">להוספה למסלול לחצו כאן</string>
+    <string name="moreInfo">לעוד פרטים לחצו כאן</string>
+    <string name="goToURL">פרטים נוספים</string>
     <string name="cancel">סגור</string>
     <string name="addToRoute">הוסף נקודה למסלול</string>
     <string name="emptyMarkerList">אנא הוסיפו לפחות שתי נקודות בכדי לבנות מסלול</string>

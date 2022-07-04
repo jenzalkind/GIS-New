@@ -77,7 +77,8 @@
     <string name="please">Please select type of attraction</string>
     <string name="getDirection">Get Directions</string>
     <string name="buildYourR">Build Your Route!</string>
-    <string name="shouldAdd">Click here to add to route</string>
+    <string name="moreInfo">Click here for more info</string>
+    <string name="goToURL">More info</string>
     <string name="cancel">Cancel</string>
     <string name="addToRoute">Add location to route</string>
     <string name="emptyMarkerList">Please add at least two locations to create a route</string>

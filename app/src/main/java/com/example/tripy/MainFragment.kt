@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -525,8 +526,11 @@ class MainFragment : Fragment(),OnMapReadyCallback,GoogleMap.OnInfoWindowClickLi
                     mSelectedMarker = p0
                     markerList.add(p0)
                     dialog.dismiss()
-
                     Log.d(TAG, "MarkerList - Added to Array, Array size is ${markerList.size}")})
+            .setNeutralButton(getString(R.string.moreInfo),
+                DialogInterface.OnClickListener { dialog, id ->
+                    onInfoClick(p0)
+                    dialog.dismiss()})
             .setNegativeButton(getString(R.string.cancel),
                 DialogInterface.OnClickListener { dialog, id -> dialog.cancel() })
         val alert: AlertDialog = builder.create()
@@ -673,6 +677,51 @@ class MainFragment : Fragment(),OnMapReadyCallback,GoogleMap.OnInfoWindowClickLi
                 polylineData.polyline.color = ContextCompat.getColor(activity!!, android.R.color.darker_gray)
                 polylineData.polyline.zIndex = 0f
             }
+        }
+    }
+
+    fun onInfoClick(p0: Marker) {
+        var lat : Double
+        var lon: Double
+        val realTimeDatabase = FirebaseDatabase.getInstance().getReference("Attractions")
+        realTimeDatabase.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (dataSnap in dataSnapshot.children) {
+                    val description = dataSnap.child("description").value.toString()
+                    lat = dataSnap.child("latitude").value.toString().toDouble()
+                    lon = dataSnap.child("Longitude").value.toString().toDouble()
+
+                    // Log.w(TAG_DB, "onInfoWindowClick: In function, description = ${p0.title})" )
+
+                    if(p0.position.latitude == lat && p0.position.longitude == lon) {
+                        Log.w(TAG_DB, "onInfoWindowClick: In function, description = ${p0.title})" )
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(changeBlogUrlByLanguage(description)))
+                        startActivity(intent)
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG_DB, "onInfoWindowClick: in onCancelled, Error = ${error})" )
+
+            }
+        })
+    }
+
+    private fun changeBlogUrlByLanguage(attrBlogUrl: String) : String {
+        val newBlogUrl:String
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && isRTL(activity!!)) { // התנאי הזה זה השינויים שצריך לעשות במידה והטלפון בעברית
+            return if(!attrBlogUrl.contains("/he/")) {
+                newBlogUrl = attrBlogUrl.replace(".com/", ".com/he/")
+                newBlogUrl
+            } else
+                attrBlogUrl
+        }
+        else {
+            return if (attrBlogUrl.contains("/he/")) {
+                newBlogUrl = attrBlogUrl.replace("/he/", "/")
+                newBlogUrl
+            } else
+                attrBlogUrl
         }
     }
 }
